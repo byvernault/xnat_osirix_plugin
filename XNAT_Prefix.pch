@@ -1,0 +1,17 @@
+//
+// Prefix header for all source files of the 'XNAT' target in the 'XNAT' project.
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+    #import <AppKit/AppKit.h>
+    #import "utils.h"
+    #import "xnatRequest.h"
+    #import "EMKeychain.h"
+    #import <OsiriXAPI/BrowserController.h>
+    #import <OsiriXAPI/DicomDatabase.h>
+    #import <OsiriXAPI/DicomDir.h>
+    #import <OsiriXAPI/DicomSeries.h>
+    #import <OsiriXAPI/DicomStudy.h>
+    #import <OsiriXAPI/DicomExport.h>
+#endif
