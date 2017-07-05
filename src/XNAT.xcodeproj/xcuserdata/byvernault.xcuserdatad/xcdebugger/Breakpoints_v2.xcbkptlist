@@ -159,11 +159,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ConnectionWindowController.m"
-            timestampString = "491837725.03512"
+            timestampString = "520954826.677604"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "269"
-            endingLineNumber = "269"
+            startingLineNumber = "321"
+            endingLineNumber = "321"
             landmarkName = "-connectionXnat:"
             landmarkType = "7">
          </BreakpointContent>
@@ -193,13 +193,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "xnatRequest.m"
-            timestampString = "499184077.313723"
+            timestampString = "520873512.004177"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "576"
-            endingLineNumber = "576"
+            startingLineNumber = "585"
+            endingLineNumber = "585"
             landmarkName = "-listSessionsForProject:andSubject:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -247,6 +247,38 @@
             startingLineNumber = "208"
             endingLineNumber = "208"
             landmarkName = "-uploadData:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ConnectionWindowController.m"
+            timestampString = "520869869.942459"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "15"
+            endingLineNumber = "15"
+            landmarkName = "profilesJSON"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ConnectionWindowController.m"
+            timestampString = "520954557.964478"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
+            landmarkName = "-addDatabaseToPreferences"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

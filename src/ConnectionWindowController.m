@@ -82,10 +82,18 @@
 {
     if(![utils isProfileAlreadySaved:self.profilesJSON forHost:[[filter xnat] getRealHost] forUser:[[filter xnat] xnatUser]])
     {
+        // data folder:
+        NSString * dataFolderValue = [dataFolder stringValue];
+        if([dataFolderValue isEqualToString:@""] || dataFolderValue == nil){
+            NSString * pluginHomeFolder = [NSString stringWithFormat:@"%@/%@", [[[NSProcessInfo processInfo]environment]objectForKey:@"HOME"], @".osirix.plugins"];
+            dataFolderValue = [NSString stringWithFormat:@"%@/%@", pluginHomeFolder, @"osirix_XNAT_data"];
+        }
         // Add the new profile:
+        NSDictionary * dbDict = @{@"database": [filter osirixDatabaseName],
+                                  @"datapath": dataFolderValue};
         NSDictionary * dict = @{@"host" : [[filter xnat] getRealHost],
                                 @"user" : [[filter xnat] xnatUser],
-                                @"databases": @[[filter osirixDatabaseName]]};
+                                @"databases": @[dbDict]};
         [self.profilesJSON addObject:dict];
         
         // Create .osirix.plugins if it doesn't exist:
@@ -117,23 +125,69 @@
 {
     // Add the database
     int index = [utils indexForProfile:self.profilesJSON forHost:[[filter xnat] getRealHost] forUser:[[filter xnat] xnatUser]];
+    
+    // data folder:
+    NSString * dataFolderValue = [dataFolder stringValue];
+    if([dataFolderValue isEqualToString:@""] || dataFolderValue == nil){
+        NSString * pluginHomeFolder = [NSString stringWithFormat:@"%@/%@", [[[NSProcessInfo processInfo]environment]objectForKey:@"HOME"], @".osirix.plugins"];
+        dataFolderValue = [NSString stringWithFormat:@"%@/%@", pluginHomeFolder, @"osirix_XNAT_data"];
+    }
+
+    // If databases found:
     NSMutableArray* dbs = [[self.profilesJSON objectAtIndex:index] objectForKey:@"databases"];
-    [dbs addObject:[filter osirixDatabaseName]];
+    BOOL notFound = TRUE;
+    for(id db in dbs)
+    {
+        if([db isKindOfClass: [NSDictionary class]] && [[db valueForKey:@"database"] isEqualToString:[filter osirixDatabaseName]]){
+            [db setValue:dataFolderValue forKey:@"datapath"];
+            notFound = FALSE;
+            break;
+        }else if([db isKindOfClass: [NSString class]] && [db isEqualToString:[filter osirixDatabaseName]]){
+            [dbs removeObject:db];
+        }
+    }
+    if(notFound){
+        NSLog(@"Adding database with path: %@  -  %@", [filter osirixDatabaseName], dataFolderValue);
+        NSDictionary * dbDict = @{@"database": [filter osirixDatabaseName],
+                                  @"datapath": dataFolderValue};
+        [dbs addObject:dbDict];
+    }
     // Rewrite the profile file
     [self.profilesJSON writeToFile:self.profilesFilePath atomically:YES];
 }
 
 - (int) setFilterClass
 {
+    // data folder:
+    NSString * dataFolderValue = [dataFolder stringValue];
+    if([dataFolderValue isEqualToString:@""] || dataFolderValue == nil){
+        NSString * pluginHomeFolder = [NSString stringWithFormat:@"%@/%@", [[[NSProcessInfo processInfo]environment]objectForKey:@"HOME"], @".osirix.plugins"];
+        dataFolderValue = [NSString stringWithFormat:@"%@/%@", pluginHomeFolder, @"osirix_XNAT_data"];
+    }
+
+    BOOL isDir;
+    if ([[NSFileManager defaultManager] fileExistsAtPath:dataFolderValue isDirectory:&isDir])
+    {
+        if(!isDir)
+        {
+            [utils displayAlert:@"The data folder is not a valid folder. Please provide an existing folder."];
+            return -1;
+        }
+    }else{
+        [utils displayAlert:@"The data folder is not a valid path. Please provide an existing folder."];
+        return -1;
+    }
+
     // Set the information on the filter class:
     if ([[xnatHost stringValue] length] > 0)
     {
         [[filter xnat] setRealHost: [xnatHost stringValue]];
         [[filter xnat] setXnatUser: [xnatUser stringValue]];
         [[filter xnat] setXnatPwd: [xnatPwd stringValue]];
+
         if([[dbName stringValue] length] != 0)
         {
-            if([[self.profilesJSON valueForKey:@"databases"] containsObject:[dbName stringValue]]){
+            if([utils getProfile:self.profilesJSON forDataBase:[dbName stringValue]] != nil){
                 [utils displayAlert:@"The database name you selected already exists. Please provide an other name."];
                 return -1;
             }else
@@ -163,9 +217,7 @@
                 [utils displayAlert:@"You haven't selected a database with your profile."];
                 return -1;
             }
-        }
-        else
-        {
+        }else{
             [filter setOsirixDatabaseName: [[profileDbNames selectedCell] title]];
             return 0;
         }
@@ -245,17 +297,17 @@
         // Message
         if(!newProfile)
         {
-            [utils displayMessage:[NSString stringWithFormat:@"Connection succeeded with the profile corresponding to the host %@ with the user %@",
-                                   [[filter xnat] getRealHost], [[filter xnat] xnatUser]]];
-            if([[utils getProfileForDatabase:self.profilesJSON forDataBase:[filter osirixDatabaseName]] count] ==0)
-                [self addDatabaseToPreferences];
-        }
-        else{
+            [utils displayMessage:[NSString stringWithFormat:@"Connection succeeded with the profile corresponding to the host %@ with the user %@", [[filter xnat] getRealHost], [[filter xnat] xnatUser]]];
+        }else{
             BOOL toSave = [utils profileAlert: [NSString stringWithFormat:@"Connection succeeded with a new profile:\n\n    host:  %@\n    user:  %@\n\nDo you want to save it?", [[filter xnat] getRealHost], [[filter xnat] xnatUser]]];
             if(toSave)
                 [self writePreferences];
         }
+        [self addDatabaseToPreferences];
         
+        // Set the data folder:
+        [[filter xnat] setDataFolder:[utils getDataFolderFromProfile:[self.profilesJSON objectAtIndex:[profiles indexOfSelectedItem]-1]
+                                                         andDatabase:[filter osirixDatabaseName]]];
         NSLog(@"current db: %@ / chosen one: %@", [filter osirixDatabaseName], [[filter xnatDatabase] name]);
         if(![[filter osirixDatabaseName] isEqualToString:[[filter xnatDatabase] name]])
         {
@@ -270,6 +322,12 @@
     }
 }
 
+- (IBAction)browseForFolder:(NSButton *)sender
+{
+    NSString* folder = [utils getDirectoryFolder];
+    [dataFolder setStringValue:folder];
+}
+
 - (IBAction)fromProfileGetDatabase:(id)sender
 {
     NSString* profile = [[profiles selectedCell] title];
@@ -280,7 +338,7 @@
         return;
     }
     else{
-        NSArray* databases = [[self.profilesJSON objectAtIndex:[profiles indexOfSelectedItem]-1] objectForKey:@"databases"];
+        NSArray* databases = [utils databasesFromProfile: [self.profilesJSON objectAtIndex:[profiles indexOfSelectedItem]-1]];
         [profileDbNames addItemsWithTitles:databases];
         [profileDbNames setEnabled:true];
     }

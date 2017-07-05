@@ -55,7 +55,7 @@
 @synthesize pluginHomeFolder;
 
 /* Methods to init */
-- (id) initWithHost: (NSString *) host andUser: (NSString *) user andPwd: (NSString *) pwd
+- (id) initWithHost: (NSString *) host andUser: (NSString *) user andPwd: (NSString *) pwd andFolder: (NSString *) folder
 {
     if (self = [super init])
     {
@@ -65,7 +65,7 @@
         [self setRealHost:host];
         self.xnatUser = user;
         self.xnatPwd = pwd;
-        [self initPaths];
+        [self initPaths:folder];
     }
     return self;
 }
@@ -79,16 +79,25 @@
         self.xnatUser = @"";
         self.xnatPwd = @"";
         self.protocol = @"";
-        [self initPaths];
+        [self initPaths: @""];
     }
     return self;
 }
 
-- (void) initPaths
+- (void) initPaths: (NSString*) path
 {
-    self.pluginHomeFolder = [NSString stringWithFormat:@"%@/%@", [[[NSProcessInfo processInfo]environment]objectForKey:@"HOME"], @".osirix.plugins"];
-    self.dataFolder = [NSString stringWithFormat:@"%@/%@", self.pluginHomeFolder, @"osirix_XNAT_data"];
+    NSFileManager *fileManager = [[NSFileManager alloc] init];
+    NSString* mainFolder = [path stringByDeletingLastPathComponent];
+    BOOL exists = [fileManager fileExistsAtPath:mainFolder];
+    if(exists){
+        self.dataFolder = path;
+    }else{
+        self.pluginHomeFolder = [NSString stringWithFormat:@"%@/%@", [[[NSProcessInfo processInfo]environment]objectForKey:@"HOME"], @".osirix.plugins"];
+        self.dataFolder = [NSString stringWithFormat:@"%@/%@", self.pluginHomeFolder, @"osirix_XNAT_data"];
+    }
+
     [utils createDirectory:self.dataFolder removeContentIfExists:false];
+    NSLog(@"DATA FOLDER: %@", self.dataFolder);
 }
 
 - (void) dealloc

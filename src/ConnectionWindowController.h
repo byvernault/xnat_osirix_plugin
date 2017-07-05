@@ -18,10 +18,12 @@
     IBOutlet NSTextField *xnatHost;
     IBOutlet NSTextField *xnatUser;
     IBOutlet NSTextField *dbName;
+    IBOutlet NSTextField *dataFolder;
     IBOutlet NSSecureTextField *xnatPwd;
     
     // button to browse xnat and download data
     IBOutlet NSButton *connectionButton;
+    IBOutlet NSButton *browsePath;
     IBOutlet NSButton *deleteProfileButton;
     
     // NSPopUpButton for profiles + NSArray to store the profiles
@@ -52,7 +54,8 @@
 
 /*BUTTON EVENTS*/
 - (IBAction) connectionXnat:(NSButton *)sender;
+- (IBAction) browseForFolder:(NSButton *)sender;
 - (IBAction) deleteProfile:(NSButton *)sender;
-- (IBAction)fromProfileGetDatabase:(id)sender;
+- (IBAction) fromProfileGetDatabase:(id)sender;
 
 @end

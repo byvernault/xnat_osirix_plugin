@@ -48,12 +48,18 @@
 + (BOOL) isROIListEmpty:(NSArray*) roiList;
 + (NSArray*) filterListOfDictionaries:(NSArray*) listDict forAttributes:(NSDictionary*) attributes;
 + (NSString*) errorAsString:(NSArray*) errorList forType:(NSString*)type;
-+ (NSArray*) getScansListFromIDs:(NSString*) project forSubject:(NSString*) subject forSession:(NSString*) session forScansIDs:(NSArray*) scans;
++ (NSArray*) getScansListFromIDs:(NSString*) project
+                      forSubject:(NSString*) subject
+                      forSession:(NSString*) session
+                     forScansIDs:(NSArray*) scans;
 + (BOOL) isProfileAlreadySaved:(NSArray*) profilesJSON forHost:(NSString*) host forUser:(NSString*) user;
 + (int) indexForProfile:(NSArray*) profilesJSON forHost:(NSString*) host forUser:(NSString*) user;
-+ (NSDictionary*) getProfileForDatabase:(NSArray*) profilesJSON forDataBase:(NSString*) databaseName;
-+ (NSArray*) databasesFromProfiles:(NSArray*) profilesJSON;
++ (NSDictionary*) getProfile:(NSArray*) profilesJSON forDataBase:(NSString*) database;
++ (NSArray*) databasesFromProfile:(NSDictionary*) profileJSON;
++ (NSString*) getDataFolderFromProfiles:(NSArray*) profilesJSON andDatabase:(NSString *) database;
++ (NSString*) getDataFolderFromProfile:(NSDictionary*) profileJSON andDatabase:(NSString *) database;
 + (void) removeROIFile:(NSString*) roiFile;
++ (NSString*) getDirectoryFolder;
 
 @end
 

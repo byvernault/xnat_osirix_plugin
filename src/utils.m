@@ -654,13 +654,22 @@
 /*
  Return host/user from the profiles saved for a specific database
  */
-+(NSDictionary*) getProfileForDatabase:(NSArray*) profilesJSON forDataBase:(NSString*) databaseName
++(NSDictionary*) getProfile:(NSArray*) profilesJSON forDataBase:(NSString*) database
 {
     for(int i=0; i<[profilesJSON count]; i++)
     {
-        NSDictionary* dict = [profilesJSON objectAtIndex:i];
-        if([[dict objectForKey:@"databases"] containsObject:databaseName])
-            return dict;
+        NSDictionary* profileDict = [profilesJSON objectAtIndex:i];
+        NSArray* dbsDict = [profileDict objectForKey:@"databases"];
+        for(id obj in dbsDict){
+            if([obj isKindOfClass:[NSDictionary class]])
+            {
+                if([[obj objectForKey:@"database"] isEqualToString:database])
+                    return profileDict;
+            }else if([obj isKindOfClass: [NSString class]]){
+                if([obj isEqualToString:database])
+                    return profileDict;
+            }
+        }
     }
     return nil;
 }
@@ -668,12 +677,53 @@
 /*
  Get a list of all databases names
  */
-+(NSArray*) databasesFromProfiles:(NSArray*) profilesJSON
++(NSArray*) databasesFromProfile:(NSDictionary*) profileJSON
 {
     NSMutableArray* databases = [[[NSMutableArray alloc] init] autorelease];
-    for(int i=0; i<[profilesJSON count]; i++)
-        [databases addObjectsFromArray:[[profilesJSON objectAtIndex:i]objectForKey:@"databases"]];
+    for(id obj in [profileJSON objectForKey:@"databases"])
+    {
+        if([obj isKindOfClass: [NSDictionary class]])
+            [databases addObject:[obj objectForKey:@"database"]];
+        else if([obj isKindOfClass: [NSString class]])
+            [databases addObject:obj];
+    }
     return databases;
+}
+
++(NSString*) getDataFolderFromProfiles:(NSArray*) profilesJSON andDatabase:(NSString *) database
+{
+    NSString * pluginHomeFolder = [NSString stringWithFormat:@"%@/%@", [[[NSProcessInfo processInfo]environment]objectForKey:@"HOME"], @".osirix.plugins"];
+    NSDictionary* profile = [utils getProfile:profilesJSON forDataBase:database];
+    for(id obj in [profile objectForKey:@"databases"])
+    {
+        if([obj isKindOfClass: [NSDictionary class]])
+        {
+            if([[obj objectForKey:@"datapath"] isEqualToString:@""] || [obj objectForKey:@"datapath"] == nil){
+                return [NSString stringWithFormat:@"%@/%@", pluginHomeFolder, @"osirix_XNAT_data"];
+            }else{
+                return [obj objectForKey:@"datapath"];
+            }
+        }
+    }
+    return [NSString stringWithFormat:@"%@/%@", pluginHomeFolder, @"osirix_XNAT_data"];
+}
+
++(NSString*) getDataFolderFromProfile:(NSDictionary*) profileJSON andDatabase:(NSString *) database
+{
+    NSString * pluginHomeFolder = [NSString stringWithFormat:@"%@/%@", [[[NSProcessInfo processInfo]environment]objectForKey:@"HOME"], @".osirix.plugins"];
+
+    for(id obj in [profileJSON objectForKey:@"databases"])
+    {
+        if([obj isKindOfClass: [NSDictionary class]])
+        {
+            if([[obj objectForKey:@"datapath"] isEqualToString:@""] || [obj objectForKey:@"datapath"] == nil){
+                return [NSString stringWithFormat:@"%@/%@", pluginHomeFolder, @"osirix_XNAT_data"];
+            }else{
+                return [obj objectForKey:@"datapath"];
+            }
+        }
+    }
+    return [NSString stringWithFormat:@"%@/%@", pluginHomeFolder, @"osirix_XNAT_data"];
 }
 
 /*
@@ -682,6 +732,27 @@
 +(void) removeROIFile:(NSString*) roiFile
 {
     [[NSFileManager defaultManager] removeItemAtPath:roiFile error:nil];
+}
+
+
+/*
+ Get the directory folder for database
+ */
++ (NSString*) getDirectoryFolder
+{
+    NSOpenPanel *panel = [NSOpenPanel openPanel];
+    [panel setCanChooseFiles:NO];
+    [panel setCanChooseDirectories:YES];
+    [panel setAllowsMultipleSelection:NO];
+    [panel setTitle:@"Choose Data Folder"];
+    NSInteger clicked = [panel runModal];
+    if (clicked == NSFileHandlingPanelOKButton) {
+        NSURL *fileURL = [panel URL];
+        return [fileURL path];
+    } else{
+        NSString* homeFolder = [NSString stringWithFormat:@"%@/%@", [[[NSProcessInfo processInfo]environment]objectForKey:@"HOME"], @".osirix.plugins"];
+        return [NSString stringWithFormat:@"%@/%@", homeFolder, @"osirix_XNAT_data"];
+    }
 }
 
 

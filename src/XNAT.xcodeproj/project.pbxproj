@@ -32,6 +32,8 @@
 		9672E8461C22E1C90032E411 /* QualityControlWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 9672E8431C22E1C90032E411 /* QualityControlWindowController.h */; };
 		9672E8471C22E1C90032E411 /* QualityControlWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9672E8441C22E1C90032E411 /* QualityControlWindowController.m */; };
 		9672E8481C22E1C90032E411 /* QualityControlWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9672E8451C22E1C90032E411 /* QualityControlWindowController.xib */; };
+		969068D61E4CD24700CDA26E /* HoroS.png in Resources */ = {isa = PBXBuildFile; fileRef = 969068D41E4CD24700CDA26E /* HoroS.png */; };
+		969068D71E4CD24700CDA26E /* TIGlogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 969068D51E4CD24700CDA26E /* TIGlogo.png */; };
 		ABA48A650680BB600089EB4F /* XNATFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = ABA48A640680BB600089EB4F /* XNATFilter.h */; };
 		ABA48A670680BB690089EB4F /* XNATFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA48A660680BB690089EB4F /* XNATFilter.m */; };
 /* End PBXBuildFile section */
@@ -65,6 +67,8 @@
 		9672E8431C22E1C90032E411 /* QualityControlWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QualityControlWindowController.h; sourceTree = "<group>"; };
 		9672E8441C22E1C90032E411 /* QualityControlWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QualityControlWindowController.m; sourceTree = "<group>"; };
 		9672E8451C22E1C90032E411 /* QualityControlWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QualityControlWindowController.xib; sourceTree = "<group>"; };
+		969068D41E4CD24700CDA26E /* HoroS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = HoroS.png; sourceTree = "<group>"; };
+		969068D51E4CD24700CDA26E /* TIGlogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TIGlogo.png; sourceTree = "<group>"; };
 		AB5D36050680E57E00F4007A /* XNAT.osirixplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XNAT.osirixplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABA48A640680BB600089EB4F /* XNATFilter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = XNATFilter.h; sourceTree = "<group>"; };
 		ABA48A660680BB690089EB4F /* XNATFilter.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = XNATFilter.m; sourceTree = "<group>"; };
@@ -108,6 +112,8 @@
 		089C167CFE841241C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				969068D41E4CD24700CDA26E /* HoroS.png */,
+				969068D51E4CD24700CDA26E /* TIGlogo.png */,
 				9660B7A41BFCCE17008807E9 /* logo.png */,
 				9660B7A51BFCCE17008807E9 /* OsiriX_preview.png */,
 				9660B7A61BFCCE17008807E9 /* OsiriX.png */,
@@ -260,6 +266,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9660B79A1BFCCE05008807E9 /* downloadWindowController.xib in Resources */,
+				969068D71E4CD24700CDA26E /* TIGlogo.png in Resources */,
 				8D5B49B0048680CD000E48DA /* InfoPlist.strings in Resources */,
 				9660B7971BFCCE05008807E9 /* ConnectionWindowController.xib in Resources */,
 				9660B7A81BFCCE17008807E9 /* OsiriX_preview.png in Resources */,
@@ -267,6 +274,7 @@
 				9660B7A91BFCCE17008807E9 /* OsiriX.png in Resources */,
 				9660B7A01BFCCE05008807E9 /* uploadAllWindowController.xib in Resources */,
 				9672E8481C22E1C90032E411 /* QualityControlWindowController.xib in Resources */,
+				969068D61E4CD24700CDA26E /* HoroS.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -334,7 +342,8 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Applications/Xcode\\ 2.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
-					"/Users/byvernault/home-local/code/git/osirix/osirix/DCM_Framework_h",
+					"/Users/byvernault/home-local/code/DCM_Framework_h",
+					"/Users/byvernault/home-local/Development/osirix/build/Development/OsiriX.framework/Versions/A/Headers",
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "@executable_path/../Plug-ins";
@@ -378,7 +387,8 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Applications/Xcode\\ 2.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
-					"/Users/byvernault/home-local/code/git/osirix/osirix/DCM_Framework_h",
+					"/Users/byvernault/home-local/code/DCM_Framework_h",
+					"/Users/byvernault/home-local/Development/osirix/build/Development/OsiriX.framework/Versions/A/Headers",
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "@executable_path/../Plug-ins";

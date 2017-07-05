@@ -35,9 +35,9 @@
 @property (strong, nonatomic) NSString * pluginHomeFolder;
 
 /* Methods to init */
-- (id) initWithHost: (NSString *) host andUser: (NSString *) user andPwd: (NSString *) pwd;
+- (id) initWithHost: (NSString *) host andUser: (NSString *) user andPwd: (NSString *) pwd andFolder: (NSString *) folder;
 - (id) init;
-- (void) initPaths;
+- (void) initPaths: (NSString*) path;
 - (void) dealloc;
 - (void) setRealHost:(NSString*) host;
 - (NSString*) getRealHost;

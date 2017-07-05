@@ -94,15 +94,16 @@
         else
             profilesJSON = [[[NSMutableArray alloc] init] autorelease];
         
-        NSDictionary* profileDict = [utils getProfileForDatabase:profilesJSON forDataBase:name];
-        if(profileDict)
+        NSDictionary* profileDict = [utils getProfile:profilesJSON forDataBase:name];
+        if(profileDict != nil)
         {
+            self.osirixDatabaseName = name;
+            self.xnatDatabase = [currentDatabase retain];
             [self.xnat setRealHost: [profileDict objectForKey:@"host"]];
             [self.xnat setXnatUser: [profileDict objectForKey:@"user"]];
             [self.xnat setDatabaseName:name];
             [self.xnat setXnatPwd: [EMGenericKeychainItem passwordForUsername:[self.xnat xnatUser] service:[self.xnat xnatHost]]];
-            self.osirixDatabaseName = name;
-            self.xnatDatabase = [currentDatabase retain];
+            [self.xnat setDataFolder:[utils getDataFolderFromProfile: profileDict andDatabase:self.osirixDatabaseName]];
             return true;
         }else
         {
